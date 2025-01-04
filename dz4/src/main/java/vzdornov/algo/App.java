@@ -1,7 +1,5 @@
 package vzdornov.algo;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
 /**
  * Hello world!
@@ -12,53 +10,88 @@ public class App
     
     public static void main( String[] args )
     {
-        IContinuousCollection<Integer> arr = new MyArray<>(Integer.class,8,4);
+        IContinCollection<String> singleArray = new SingleArray<>();
+        IContinCollection<String> vectorArray = new VectorArray<>();
+        IContinCollection<String> factorArray = new FactorArray<>(String[].class,1,100.0/100);
+        IContinCollection<String> matrixArray = new MatrixArray<>();
 
-        System.out.println("---------------- copacity() + size() + isEmpty()----------------");
+        addValues(singleArray, 100000);
+        getValues(singleArray, 100000);
+        removeValues(singleArray, 100000);
 
-        System.out.println(arr.copacity());
-        System.out.println(arr.size());
-        System.out.println(arr.isEmpty());
+        addValues(vectorArray, 100000);
+        getValues(vectorArray, 100000);
+        removeValues(vectorArray, 100000);
 
-        System.out.println("---------------- add(i) + get(i,j)----------------");
+        addValues(matrixArray, 100000);
+        getValues(matrixArray, 100000);
+        removeValues(matrixArray, 100000);
 
-        for(int i = 0; i < 64; i++) {
-            arr.add(i);
-        }
+        addValues(factorArray, 100000);
+        getValues(factorArray, 100000);
+        removeValues(factorArray, 100000);
 
-        for(int i = 0; i < 16; i++) {
-            for(int j = 0; j < 4; j++) {
-                System.out.println(arr.get(i,j));
+        testPriorityQueue();
+    }
+
+    private static void addValues(IContinCollection<String> array, int count) {
+        long start = System.currentTimeMillis();
+        Random random = new Random();
+        for (int i = 0; i < count; i++) {
+            int bound = 0;
+            if (array.size() > 1) {
+                bound = random.nextInt(array.size() - 1);
             }
+            array.add(" " + i, bound);
         }
+        System.out.println("add " + array + " " + count + ": " + (System.currentTimeMillis() - start) + " ms");
+    }
 
-        System.out.println("---------------- remove(i) + get(i)----------------");
-
-        for(int i = 0; i < 64; i++) {
-            System.out.println(arr.remove(i));
-            System.out.println(arr.get(i));
-        }
-
-        System.out.println("---------------- set(i,val=i) + get(i)----------------");
-
-        for(int i = 0; i < arr.copacity(); i++) {
-            arr.set(i,i);
-        }
-
-        for(int i = 0; i < arr.copacity(); i++) {
-            System.out.println(arr.get(i));
-        }
-
-        System.out.println("---------------- set(i,j,val=i*j) + get(i)----------------");
-
-        for(int i = 0; i < 16; i++) {
-            for(int j = 0; j < 4; j++) {
-                arr.set(i,j,i*j);
+    private static void getValues(IContinCollection<String> array, int count) {
+        long start = System.currentTimeMillis();
+        Random random = new Random();
+        for (int i = 0; i < count; i++) {
+            int bound = 0;
+            if (array.size() > 1) {
+                bound = random.nextInt(array.size() - 1);
             }
+            array.get(bound);
         }
+        System.out.println("get " + array + " " + count + ": " + (System.currentTimeMillis() - start) + " ms");
+    }
 
-        for(int i = 0; i < arr.copacity(); i++) {
-            System.out.println(arr.get(i));
+    private static void removeValues(IContinCollection<String> array, int count) {
+        long start = System.currentTimeMillis();
+        Random random = new Random();
+        for (int i = 0; i < count; i++) {
+            int bound = 0;
+            if (array.size() > 1) {
+                bound = random.nextInt(array.size() - 1);
+            }
+            array.remove(bound);
         }
+        System.out.println("remove " + array + " " + count + ": " + (System.currentTimeMillis() - start) + " ms");
+    }
+
+
+    private static void addValueByIndex(IContinCollection<String> array, int index) {
+        array.add(" -index- ", index);
+        System.out.println(array + " index " + index);
+    }
+
+    private static void removeValue(IContinCollection<String> array, int index) {
+        String s = array.remove(index);
+        System.out.println(array + " deleted value " + s + " index " + index);
+    }
+
+    private static void testPriorityQueue() {
+        PriorityQueue<String> pQueue = new PriorityQueue<>();
+        pQueue.enqueue(4, "First");
+        pQueue.enqueue(1, "Second");
+        pQueue.enqueue(2, "Thirth");
+        System.out.println(pQueue.dequeue());
+        System.out.println(pQueue.dequeue());
+        System.out.println(pQueue.dequeue());
+        pQueue.dequeue();
     }
 }
